@@ -1,5 +1,12 @@
+import tempfile
 import os
-from autogen import ConversableAgent
+from autogen import ConversableAgent, runtime_logging
+from autogen.coding import LocalCommandLineCodeExecutor, DockerCommandLineCodeExecutor
+
+# Start logging. Note that logging is not compatible with LocalCommandLineCodeExecutor
+# because it has non-serializable objects in its configuration.
+logging_session_id = runtime_logging.start(config={"dbname": "logs.db"})
+print("Logging session ID: " + str(logging_session_id))
 
 agent_with_number = ConversableAgent(
     "agent_with_number",
@@ -24,16 +31,27 @@ agent_guess_number = ConversableAgent(
 
 result = agent_with_number.initiate_chat(
     agent_guess_number,
-    message="I have a number between 1 and 100. Guess it!",
+    message="I have a number between 52 and 54. Guess it!",
 )
 
-# human_proxy = ConversableAgent(
-#     "human_proxy",
-#     llm_config=False,  # no LLM used for human proxy
-#     human_input_mode="ALWAYS",  # always ask for human input
-# )
+runtime_logging.stop()
 
-# result = human_proxy.initiate_chat(
-#     agent_with_number,
-#     message="10",
-# )
+def get_log(dbname="logs.db", table="chat_completions"):
+    import sqlite3
+    import json
+
+    con = sqlite3.connect(dbname)
+    query = f"SELECT * from {table}"
+    cursor = con.execute(query)
+    rows = cursor.fetchall()
+    column_names = [description[0] for description in cursor.description]
+    print(column_names)
+    data = [dict(zip(column_names, row)) for row in rows]
+    con.close()
+
+    json_data = json.dumps(data)
+
+    return json_data
+
+logs = get_log()
+print(logs)

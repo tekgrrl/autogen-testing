@@ -9,7 +9,7 @@ __pycache__/
 # Distribution / packaging
 .history/
 .Python
-bin/
+bin/    
 build/
 develop-eggs/
 dist/
@@ -167,3 +167,4 @@ pyvenv.cfg
 logs.json
 logs.txt
 logs.db
+docker-image/Dockerfile

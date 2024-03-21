@@ -168,3 +168,4 @@ logs.json
 logs.txt
 logs.db
 docker-image/Dockerfile
+output.json

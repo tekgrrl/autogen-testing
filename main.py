@@ -1,8 +1,6 @@
 import autogen, os, json
-from dotenv import find_dotenv, load_dotenv
 from pathlib import Path
 
-load_dotenv(Path('../../.env'))
 
 # Setting configurations for autogen
 config_list = autogen.config_list_from_json(
@@ -75,11 +73,14 @@ critic = autogen.AssistantAgent(
 groupchat = autogen.GroupChat(
     agents=[user_proxy, engineer, scientist, planner, executor, critic], messages=[], max_round=50
 )
-manager = autogen.GroupChatManager(groupchat=groupchat, llm_config=gpt4_config)
+manager = autogen.GroupChatManager(
+    groupchat=groupchat, 
+    llm_config=gpt4_config
+    )
 
 user_proxy.initiate_chat(
     manager,
     message="""
-        find papers on LLM applications from arxiv in the last week, create a markdown table of different domains.
+        Find papers on LLM applications from arxiv in the last week, create a markdown table of different domains.
     """,
 )

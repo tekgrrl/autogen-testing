@@ -169,3 +169,4 @@ logs.txt
 logs.db
 docker-image/Dockerfile
 output.json
+OAI_CONFIG_LIST

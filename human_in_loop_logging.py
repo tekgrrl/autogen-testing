@@ -54,4 +54,14 @@ def get_log(dbname="logs.db", table="chat_completions"):
     return json_data
 
 logs = get_log()
-print(logs)
+temp_file = tempfile.NamedTemporaryFile(
+    dir="logs",
+    delete=False,
+    mode="w",
+    suffix=".log"
+)
+
+temp_file.write(logs)
+
+temp_file.close()
+ 
